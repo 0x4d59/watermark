@@ -3218,10 +3218,32 @@ Share = {
 
 var COUNTERBTN = (function () {
   var 
+      // initialize input value on app start
       initInputValue = function () {
         $('.crd-window__num').each(function () {
           $(this).val(0);
         });
+      },
+      // create interval for valChange trigger
+      createTrigger = function () {
+        var
+            oldValue = [0, 0];
+        setInterval(function () {
+          var
+              newValue = [];
+          $('.crd-window__num').each(function () {
+            newValue.push(parseInt($(this).val()));
+          });
+          if (oldValue[0] !== newValue[0] || oldValue[1] !== newValue[1]) {
+            $(document).trigger('valChange');
+            oldValue[0] = newValue[0];
+            oldValue[1] = newValue[1];
+            // console.log(oldValue, newValue);
+          } else {
+            newValue = [];
+            // console.log('not trigger ', oldValue, newValue)
+          }
+        }, 100);
       },
       // get button, checkout what direction it is 
       // and change appropriate window
@@ -3232,16 +3254,16 @@ var COUNTERBTN = (function () {
 
         // coordWindow.attr('value', parseInt(coordWindow.attr('value')) + direction);
         coordWindow.val(parseInt(coordWindow.val()) + direction);
-      },
-      changeInputValue = function (inputField) {
-        console.log(inputField);
-        console.log(inputField.val());
       };
 
   return {
 
     init: function () {
+      // initialize input value
       initInputValue();
+      // put trigger on input value
+      createTrigger();
+      // change input value by button press
       $('.crd-arrow-list__item').on('click', function () {
         changeCoordValue($(this));
       });
@@ -3323,8 +3345,9 @@ var DRAGGABLE = (function () {
         },
         add_listerners: function () {
             watermark.on('drag', this.set_pos);
-            spinners.on('click', this.set_pos_x);
-            inputWindow.on('focusout', this.set_pos_x);
+            // spinners.on('click', this.set_pos_x);
+            // inputWindow.on('focusout', this.set_pos_x);
+            $(document).on('valChange', this.set_pos_x);
             slider.on('slide', this.set_opacity);
             grisSquare.on('click', this.set_grid_pos)
         },

@@ -46,8 +46,9 @@ var DRAGGABLE = (function () {
         },
         add_listerners: function () {
             watermark.on('drag', this.set_pos);
-            spinners.on('click', this.set_pos_x);
-            inputWindow.on('focusout', this.set_pos_x);
+            // spinners.on('click', this.set_pos_x);
+            // inputWindow.on('focusout', this.set_pos_x);
+            $(document).on('valChange', this.set_pos_x);
             slider.on('slide', this.set_opacity);
             grisSquare.on('click', this.set_grid_pos)
         },
